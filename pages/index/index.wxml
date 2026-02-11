@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="header">
+    <view class="title">2048</view>
+    <view class="score-container">
+      <view class="score-label">SCORE</view>
+      <view class="score-value">{{score}}</view>
+    </view>
+  </view>
+
+  <view class="game-container">
+    <view class="grid-container" bindtouchstart="touchStart" bindtouchend="touchEnd"
+    disable-scroll="true">
+      <view wx:for="{{grid}}" wx:for-item="row" wx:for-index="rIdx" wx:key="rIdx" class="grid-row">
+        <view wx:for="{{row}}" wx:for-item="cell" wx:for-index="cIdx" wx:key="cIdx" class="grid-cell">
+          <view class="tile tile-{{cell}}">
+            <text class="tile-inner">{{cell > 0 ? cell : ''}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

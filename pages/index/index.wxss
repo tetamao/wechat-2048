@@ -1,0 +1,135 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 使用 justify-content 让内容分布 */
+  justify-content: center; 
+  padding: 40rpx;
+  background-color: #faf8ef;
+  width: 100vw;   /* 占满屏幕宽度 */
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden; /* 彻底禁止页面滚动 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 650rpx;
+  /* 增加 margin-bottom 让棋盘向下推 */
+  margin-bottom: 80rpx; 
+  margin-top: -100rpx; /* 向上提一点标题，给棋盘腾空间 */
+}
+
+.title {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #776e65;
+}
+
+.score-container {
+  background: #bbada0;
+  padding: 10rpx 40rpx;
+  border-radius: 6rpx;
+  text-align: center;
+  min-width: 120rpx;
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: #eee4da;
+  font-weight: bold;
+}
+
+.score-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* 棋盘主体 */
+.game-container {
+  width: 650rpx;
+  height: 650rpx;
+  background: #bbada0;
+  border-radius: 12rpx;
+  padding: 10rpx;
+  box-sizing: border-box;
+  /* 这里的阴影会让棋盘有立体感 */
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.1); 
+}
+
+.grid-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-row {
+  display: flex;
+  flex: 1; /* 平分高度 */
+}
+
+.grid-cell {
+  flex: 1; /* 平分宽度 */
+  padding: 10rpx;
+  box-sizing: border-box;
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  border-radius: 6rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 关键：增加动画过渡 */
+  transition: all 100ms ease-in-out; 
+  animation: appear 200ms ease-in-out; /* 增加新数字出现时的动画 */
+  background: rgba(238, 228, 218, 0.35); /* 默认空格子颜色 */
+}
+
+
+
+.tile-inner {
+  font-size: 55rpx;
+  font-weight: bold;
+}
+
+/* 数字背景色补全 */
+.tile-2 { background: #eee4da; color: #776e65; }
+.tile-4 { background: #ede0c8; color: #776e65; }
+.tile-8 { background: #f2b179; color: #f9f6f2; }
+.tile-16 { background: #f59563; color: #f9f6f2; }
+.tile-32 { background: #f67c5f; color: #f9f6f2; }
+.tile-64 { background: #f65e3b; color: #f9f6f2; }
+.tile-128 { background: #edcf72; color: #f9f6f2; font-size: 45rpx; }
+.tile-256 { background: #edcc61; color: #f9f6f2; font-size: 45rpx; }
+.tile-512 { background: #edc850; color: #f9f6f2; font-size: 45rpx; }
+.tile-1024 { background: #edc53f; color: #f9f6f2; font-size: 35rpx; }
+.tile-2048 { background: #edc22e; color: #f9f6f2; font-size: 35rpx; }
+
+/* 1. 定义动画：这部分告诉浏览器动画是怎么动的 */
+@keyframes appear {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 2. 使用动画：将动画绑定到数字格子上 */
+.tile {
+  width: 100%;
+  height: 100%;
+  border-radius: 6rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* 基础平滑过渡：处理颜色变化和位置移动（虽然位置是瞬间刷新的，但这里加了会更自然） */
+  transition: all 100ms ease-in-out; 
+  
+  /* 核心：每当一个新数字产生（也就是这个 view 渲染出来时），执行 appear 动画 */
+  /* 200ms 是持续时间，ease-in-out 是平滑曲线 */
+  animation: appear 200ms ease-in-out; 
+}
