@@ -2,12 +2,18 @@ Page({
   data: {
     grid: [],
     score: 0,
+    bestScore: 0, // 新增：最高分变量
     startX: 0,
     startY: 0,
     gameOver: false
   },
 
   onLoad() {
+    // 游戏启动时，先从手机存储中读取最高分
+    const savedBest = wx.getStorageSync('bestScore') || 0;
+    this.setData({
+      bestScore: savedBest
+    });
     this.initGame();
   },
 
@@ -111,13 +117,27 @@ move(direction) {
     this.setData({ grid, score });
     
     if (this.isGameOver(grid)) {
-      this.setData({ gameOver: true });
-      wx.showModal({
-        title: '游戏结束',
-        content: `得分：${score}`,
-        showCancel: false,
-        success: () => this.initGame()
-      });
+      let currentScore = score;
+      let currentBest = this.data.bestScore;
+      if (currentScore > currentBest) {
+        currentBest = currentScore;
+        // 同步保存到手机本地存储
+        wx.setStorageSync('bestScore', currentBest);
+      }
+      this.setData({ 
+        grid,
+        score: currentScore,
+        bestScore: currentBest});
+     
+        if (this.isGameOver(grid)) {
+          this.setData({ gameOver: true });
+          wx.showModal({
+            title: '游戏结束',
+            content: `得分：${currentScore}\n最高分：${currentBest}`,
+            showCancel: false,
+            success: () => this.initGame()
+          });
+        }
     }
   }
 },
