@@ -1,15 +1,15 @@
+/* --- 基础布局 --- */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 使用 justify-content 让内容分布 */
   justify-content: center; 
   padding: 40rpx;
   background-color: #faf8ef;
-  width: 100vw;   /* 占满屏幕宽度 */
+  width: 100vw;
   height: 100vh;
   box-sizing: border-box;
-  overflow: hidden; /* 彻底禁止页面滚动 */
+  overflow: hidden;
 }
 
 .header {
@@ -17,34 +17,21 @@
   justify-content: space-between;
   align-items: center;
   width: 650rpx;
-  /* 增加 margin-bottom 让棋盘向下推 */
   margin-bottom: 60rpx; 
-  margin-top: -100rpx; /* 向上提一点标题，给棋盘腾空间 */
+  margin-top: -100rpx;
 }
 
 .title {
   font-size: 90rpx;
   font-weight: 800;
   color: #776e65;
-  letter-spacing: -2rpx; /* 紧凑一点更有现代感 */
+  letter-spacing: -2rpx;
 }
 
-.tile-2048 {
-  background: linear-gradient(to bottom right, #edc22e, #ffcc00);
-  color: #fff;
-  box-shadow: 0 0 15rpx 5rpx rgba(243, 215, 116, 0.45); /* 金色光晕 */
-  font-size: 45rpx; /* 数字多了，字号稍微缩小点 */
-}
-
-/* 加个简单的缩放动画 */
-@keyframes win-scale {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.tile-2048 {
-  animation: win-scale 0.5s ease-in-out;
+/* --- 分数展示 --- */
+.scores-wrapper {
+  display: flex;
+  gap: 15rpx;
 }
 
 .score-container {
@@ -53,17 +40,11 @@
   border-radius: 12rpx;
   text-align: center;
   min-width: 120rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05); /* 加入微弱阴影增加立体感 */
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
 }
 
-/* 可以给最高分框换个更亮的颜色点缀 */
 .best-container {
   background: #8f7a66; 
-}
-
-.scores-wrapper {
-  display: flex;
-  gap: 15rpx; /* 两个分数框之间的间距 */
 }
 
 .score-label {
@@ -78,15 +59,15 @@
   color: #fff;
 }
 
-/* 棋盘主体 */
+/* --- 棋盘主体 (关键修改：增加 relative) --- */
 .game-container {
+  position: relative; /* 必须加这个，子元素 game-message 才能准确覆盖 */
   width: 650rpx;
   height: 650rpx;
   background: #bbada0;
   border-radius: 20rpx;
   padding: 12rpx;
   box-sizing: border-box;
-  /* 这里的阴影会让棋盘有立体感 */
   box-shadow: 0 12rpx 40rpx rgba(0,0,0,0.12); 
 }
 
@@ -99,15 +80,16 @@
 
 .grid-row {
   display: flex;
-  flex: 1; /* 平分高度 */
+  flex: 1;
 }
 
 .grid-cell {
-  flex: 1; /* 平分宽度 */
+  flex: 1;
   padding: 10rpx;
   box-sizing: border-box;
 }
 
+/* --- 数字方块 --- */
 .tile {
   width: 100%;
   height: 100%;
@@ -115,21 +97,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* 关键：增加动画过渡 */
   transition: all 120ms ease-in-out; 
-  animation: appear 200ms ease-in-out; /* 增加新数字出现时的动画 */
-  background: rgba(238, 228, 218, 0.35); /* 默认空格子颜色 */
+  animation: appear 200ms ease-in-out; 
+  background: rgba(238, 228, 218, 0.35);
 }
-
-
 
 .tile-inner {
   font-size: 55rpx;
   font-weight: bold;
-  line-height: 1; /* 修正文字基线对齐 */
+  line-height: 1;
 }
 
-/* 数字背景色补全 */
+/* --- 数字颜色库 --- */
 .tile-2 { background: #eee4da; color: #776e65; }
 .tile-4 { background: #ede0c8; color: #776e65; }
 .tile-8 { background: #f2b179; color: #f9f6f2; }
@@ -140,88 +119,86 @@
 .tile-256 { background: #edcc61; color: #f9f6f2; font-size: 45rpx; }
 .tile-512 { background: #edc850; color: #f9f6f2; font-size: 45rpx; }
 .tile-1024 { background: #edc53f; color: #f9f6f2; font-size: 35rpx; }
-.tile-2048 { background: #edc22e; color: #f9f6f2; font-size: 35rpx; }
-
-/* 1. 定义动画：这部分告诉浏览器动画是怎么动的 */
-@keyframes appear {
-  0% { opacity: 0; transform: scale(0); }
-  100% { opacity: 1; transform: scale(1); }
+.tile-2048 { 
+  background: linear-gradient(to bottom right, #edc22e, #ffcc00);
+  color: #fff;
+  box-shadow: 0 0 15rpx 5rpx rgba(243, 215, 116, 0.45);
+  font-size: 35rpx;
+  animation: win-scale 0.5s ease-in-out;
 }
 
-/* 2. 使用动画：将动画绑定到数字格子上 */
-.tile {
-  width: 100%;
-  height: 100%;
-  border-radius: 6rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  /* 基础平滑过渡：处理颜色变化和位置移动（虽然位置是瞬间刷新的，但这里加了会更自然） */
-  transition: all 100ms ease-in-out; 
-  
-  /* 核心：每当一个新数字产生（也就是这个 view 渲染出来时），执行 appear 动画 */
-  /* 200ms 是持续时间，ease-in-out 是平滑曲线 */
-  animation: appear 200ms ease-in-out; 
-}
-
-/* 结算层背景 */
+/* --- 结算层样式 --- */
 .game-message {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(238, 228, 218, 0.85); /* 经典米色透明 */
-  backdrop-filter: blur(4px); /* 高斯模糊，非常高级 */
+  background: rgba(238, 228, 218, 0.85); 
+  backdrop-filter: blur(4px); 
   display: flex;
+  flex-direction: column; /* 纵向排列 */
   justify-content: center;
   align-items: center;
   z-index: 100;
   border-radius: 20rpx;
   animation: fadeIn 0.4s ease;
+  text-align: center; /* 确保文字居中 */
+}
+
+.message-content {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .status-title {
-  font-size: 80rpx;
+  font-size: 70rpx;
   font-weight: bold;
   color: #776e65;
-  display: block;
-  margin-bottom: 30rpx;
+  margin-bottom: 20rpx;
 }
 
 .score-detail {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  margin-bottom: 40rpx;
-}
-
-.score-item .label {
-  font-size: 24rpx;
-  color: #776e65;
-  display: block;
-}
-
-.score-item .value {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #cf2c00;
+  margin-bottom: 30rpx;
 }
 
 .motivation-text {
-  font-size: 32rpx;
+  font-size: 30rpx;
   color: #776e65;
   font-style: italic;
-  display: block;
-  margin-bottom: 50rpx;
+  margin-bottom: 40rpx;
+  padding: 0 20rpx;
 }
 
 .restart-btn {
   background: #8f7a66;
   color: #fff;
   border-radius: 10rpx;
-  padding: 10rpx 40rpx;
+  padding: 20rpx 60rpx;
+  font-size: 34rpx;
+  line-height: 1.2;
+}
+
+.btn-hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+/* --- 动画定义 --- */
+@keyframes appear {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes win-scale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
