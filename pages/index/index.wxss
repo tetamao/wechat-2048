@@ -32,6 +32,19 @@
 .tile-2048 {
   background: linear-gradient(to bottom right, #edc22e, #ffcc00);
   color: #fff;
+  box-shadow: 0 0 15rpx 5rpx rgba(243, 215, 116, 0.45); /* 金色光晕 */
+  font-size: 45rpx; /* 数字多了，字号稍微缩小点 */
+}
+
+/* 加个简单的缩放动画 */
+@keyframes win-scale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.tile-2048 {
+  animation: win-scale 0.5s ease-in-out;
 }
 
 .score-container {
@@ -150,4 +163,65 @@
   /* 核心：每当一个新数字产生（也就是这个 view 渲染出来时），执行 appear 动画 */
   /* 200ms 是持续时间，ease-in-out 是平滑曲线 */
   animation: appear 200ms ease-in-out; 
+}
+
+/* 结算层背景 */
+.game-message {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(238, 228, 218, 0.85); /* 经典米色透明 */
+  backdrop-filter: blur(4px); /* 高斯模糊，非常高级 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  border-radius: 20rpx;
+  animation: fadeIn 0.4s ease;
+}
+
+.status-title {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #776e65;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+.score-detail {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+.score-item .label {
+  font-size: 24rpx;
+  color: #776e65;
+  display: block;
+}
+
+.score-item .value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #cf2c00;
+}
+
+.motivation-text {
+  font-size: 32rpx;
+  color: #776e65;
+  font-style: italic;
+  display: block;
+  margin-bottom: 50rpx;
+}
+
+.restart-btn {
+  background: #8f7a66;
+  color: #fff;
+  border-radius: 10rpx;
+  padding: 10rpx 40rpx;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }

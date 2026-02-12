@@ -1,18 +1,25 @@
 <view class="container">
   <view class="header">
     <view class="title">2048</view>
-    <view class="scores-wrapper">    <view class="score-container">
-      <view class="score-label">SCORE</view>
-      <view class="score-value">{{score}}</view>
+    <view class="scores-wrapper">
+      <view class="score-container">
+        <view class="score-label">SCORE</view>
+        <view class="score-value">{{score}}</view>
+      </view>
+      <view class="score-container best-container">
+        <view class="score-label">BEST</view>
+        <view class="score-value">{{bestScore}}</view>
+      </view>
     </view>
-    <view class="score-container best-container"> <view class="score-label">BEST</view>
-      <view class="score-value">{{bestScore}}</view>
   </view>
-</view>
-</view>
+
   <view class="game-container">
-    <view class="grid-container" bindtouchstart="touchStart" bindtouchend="touchEnd"
-    disable-scroll="true">
+    <view 
+      class="grid-container" 
+      bindtouchstart="touchStart" 
+      bindtouchend="touchEnd" 
+      disable-scroll="true"
+    >
       <view wx:for="{{grid}}" wx:for-item="row" wx:for-index="rIdx" wx:key="rIdx" class="grid-row">
         <view wx:for="{{row}}" wx:for-item="cell" wx:for-index="cIdx" wx:key="cIdx" class="grid-cell">
           <view class="tile tile-{{cell}}">
@@ -21,5 +28,32 @@
         </view>
       </view>
     </view>
+
+    <view class="game-message {{gameOver ? 'game-over' : ''}} {{gameWin ? 'game-won' : ''}}" wx:if="{{gameOver || gameWin}}">
+      <view class="message-content">
+        <text class="status-title">{{gameWin ? '达成 2048！' : '游戏结束'}}</text>
+        
+        <view class="score-detail">
+          <view class="score-item">
+            <text class="label">本次得分</text>
+            <text class="value">{{score}}</text>
+          </view>
+          <view class="score-item">
+            <text class="label">历史最高</text>
+            <text class="value">{{bestScore}}</text>
+          </view>
+        </view>
+
+        <text class="motivation-text">{{motivation}}</text>
+        
+        <button class="restart-btn" bindtap="initGame" hover-class="btn-hover">
+          {{gameWin ? '挑战极限' : '再来一局'}}
+        </button>
+      </view>
+    </view>
   </view>
+
+  <!-- <view class="footer">
+    <text class="footer-tip">向下滑动以合并数字</text>
+  </view> -->
 </view>

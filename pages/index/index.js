@@ -5,7 +5,10 @@ Page({
     bestScore: 0, // 新增：最高分变量
     startX: 0,
     startY: 0,
-    gameOver: false
+    gameOver: false,
+    hasWon: false, // 新增：记录本局是否已经达成过 2048
+    gameWin: false,
+    motivation: ''
   },
 
   onLoad() {
@@ -49,7 +52,8 @@ Page({
     let grid = Array(4).fill(0).map(() => Array(4).fill(0));
     this.addRandomTile(grid);
     this.addRandomTile(grid);
-    this.setData({ grid, score: 0 , gameOver: false});
+    this.setData({ grid, score: 0 , gameOver: false,hasWon:false    });
+
   },
 
   addRandomTile(grid) {
@@ -93,7 +97,15 @@ Page({
     this.move(direction);
   },
 
-  // 移动逻辑总入口
+// 文案随机库
+getMotivation(score, has2048) {
+  if (has2048) return "天才！你已经站在了数字之巅！";
+  if (score > 5000) return "离 2048 仅一步之遥，手感热得发烫！";
+  if (score > 2000) return "渐入佳境，这把稳了，继续努力！";
+  return "生活就像 2048，总有合不上的地方，再来！";
+},
+
+
   // 移动逻辑总入口
 move(direction) {
   let grid = JSON.parse(JSON.stringify(this.data.grid));
@@ -148,6 +160,29 @@ move(direction) {
     } else {
       this.playSound('move');
     }
+
+    // 1. 判断胜利
+    if (!this.data.hasWon) {
+      const isWin = grid.some(row => row.some(cell => cell === 2048));
+      if (isWin) {
+        this.setData({ 
+          gameWin: true, 
+          hasWon: true,
+          motivation: this.getMotivation(score, true) 
+        });
+        return; // 弹出胜利层
+      }
+    }
+
+    // 2. 检查死亡
+    if (this.isGameOver(grid)) {
+      this.setData({ 
+        gameOver: true,
+        motivation: this.getMotivation(score, false)
+      });
+    }
+
+   
     this.addRandomTile(grid);
     this.setData({ grid, score });
     
