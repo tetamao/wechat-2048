@@ -10,11 +10,39 @@ Page({
 
   onLoad() {
     // 游戏启动时，先从手机存储中读取最高分
+    this.initAudio();
     const savedBest = wx.getStorageSync('bestScore') || 0;
     this.setData({
       bestScore: savedBest
     });
     this.initGame();
+    
+  },
+
+  // 初始化音频上下文
+  initAudio() {
+    this.moveAudio = wx.createInnerAudioContext();
+    this.moveAudio.src = '/assets/move.mp3'; // 确保路径正确
+
+    this.mergeAudio = wx.createInnerAudioContext();
+    this.mergeAudio.src = '/assets/merge.mp3';
+  },
+
+  // 播放音效的辅助函数
+  playSound(type) {
+    if (type === 'move') {
+      this.moveAudio.stop(); // 先停止，防止连续滑动时不触发
+      this.moveAudio.play();
+    } else if (type === 'merge') {
+      this.mergeAudio.stop();
+      this.mergeAudio.play();
+    }
+  },
+
+  // 别忘了在页面卸载时销毁实例，释放内存
+  onUnload() {
+    this.moveAudio.destroy();
+    this.mergeAudio.destroy();
   },
 
   initGame() {
@@ -71,6 +99,7 @@ move(direction) {
   let grid = JSON.parse(JSON.stringify(this.data.grid));
   let score = this.data.score;
   let changed = false;
+  let hasMerged = false; // 新增：标记是否发生了合并
 
   // 0:上, 1:右, 2:下, 3:左
   // 目标是把所有方向旋转到“向左滑动”
@@ -96,6 +125,7 @@ move(direction) {
         score += row[c];
         row.splice(c + 1, 1); // 删掉被合并的那个
         changed = true;
+        hasMerged = true; // 记录发生了合并
       }
     }
     
@@ -113,6 +143,11 @@ move(direction) {
 
   // 第四步：如果棋盘变了，生成新数字并更新界面
   if (changed) {
+    if (hasMerged) {
+      this.playSound('merge');
+    } else {
+      this.playSound('move');
+    }
     this.addRandomTile(grid);
     this.setData({ grid, score });
     
