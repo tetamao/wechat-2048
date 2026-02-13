@@ -30,6 +30,16 @@
     </view>
 
     <view class="game-message {{gameOver ? 'game-over' : ''}} {{gameWin ? 'game-won' : ''}}" wx:if="{{gameOver || gameWin}}">
+      
+      <view class="confetti-container" wx:if="{{gameWin}}">
+        <view 
+          class="confetti" 
+          wx:for="{{15}}" 
+          wx:key="index" 
+          style="left:{{index * 7}}%; animation-delay:{{index * 0.1}}s; background:{{index % 2 == 0 ? '#edc22e' : '#f67c5f'}}">
+        </view>
+      </view>
+
       <view class="message-content">
         <text class="status-title">{{gameWin ? '达成 2048！' : '游戏结束'}}</text>
         
@@ -46,14 +56,25 @@
 
         <text class="motivation-text">{{motivation}}</text>
         
-        <button class="restart-btn" bindtap="initGame" hover-class="btn-hover">
-          {{gameWin ? '挑战极限' : '再来一局'}}
-        </button>
+        <view class="btn-group">
+          <button 
+            class="restart-btn {{gameWin ? 'continue-btn' : ''}}" 
+            bindtap="{{gameWin ? 'continueGame' : 'resetGame'}}" 
+            hover-class="btn-hover"
+          >
+            {{gameWin ? '挑战极限' : '再来一局'}}
+          </button>
+          
+          <button 
+            wx:if="{{gameWin}}" 
+            class="restart-btn secondary-btn" 
+            bindtap="resetGame" 
+            hover-class="btn-hover"
+          >
+            重新开始
+          </button>
+        </view>
       </view>
     </view>
   </view>
-
-  <!-- <view class="footer">
-    <text class="footer-tip">向下滑动以合并数字</text>
-  </view> -->
 </view>
